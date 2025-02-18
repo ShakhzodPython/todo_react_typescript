@@ -1,18 +1,28 @@
-import { TaskListItem } from './TaskListItem';
-import { Task } from './types';
+import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 
-type TypeListProps = {
-  tasks: Task[];
+type TypeTaskListProps = {
+  header: ReactNode;
 };
 
-export function TaskList({ tasks }: TypeListProps) {
+// We can define props with a type, but using PropsWithChildren allows passing child elements
+export function TaskList({
+  header,
+  children,
+}: PropsWithChildren<TypeTaskListProps>) {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div>
-      <ul>
-        {tasks.map((task) => (
-          <TaskListItem key={task.id}>{task.title}</TaskListItem>
-        ))}
-      </ul>
+      {header}
+      <p>Seconds passed: {seconds}</p>
+      <ul>{children}</ul>
     </div>
   );
 }
